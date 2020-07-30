@@ -2,6 +2,7 @@
 from datetime import datetime
 import pandas as pd
 import os, re, argparse
+from plotnine import *
 
 parser = argparse.ArgumentParser()                 # To take arguments from cli
 parser.add_argument("files", nargs="+")            # Adds the argument files
@@ -91,5 +92,9 @@ def gather( df, key, value, cols ):
     value_name = value
     return pd.melt( df, id_vars, id_values, var_name, value_name )
 
+long_data = gather( normalized_values, 'condition', 'measurement', cell_num )
+long_data['time_point'] = long_data.index
+t = ggplot(data = long_data) + geom_line(mapping=aes(x = "time_point" , y = "measurement")) + facet_wrap("~ condition")
+t.save("my-plot.pdf")
 print("The normalised file is saved as " + output + " in the current directory")
 print("Done")                                  # Marks the end of the program
