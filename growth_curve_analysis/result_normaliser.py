@@ -1,7 +1,7 @@
 #!/usr/bin/env python3                             
 from datetime import datetime                      # Need to install exrex, pandas
 import pandas as pd                                # A library to work with dataframes
-import os, re, argparse, exrex
+import os, re, argparse
 parser = argparse.ArgumentParser()                 # To take arguments from cli
 parser.add_argument("files", nargs="+")            # Adds the argument files
 opts = parser.parse_args()
