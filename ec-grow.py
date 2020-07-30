@@ -81,5 +81,15 @@ with open( tempfile , 'r') as f:              # Opens the tempfile in reading mo
     normalized_values.to_csv(output)           # The normalised values are saved onto an outputfile
     f.close()                                  # Close the tempfile
 os.remove(tempfile)              # Delete the tempfile
+
+#### Define gather function similar to tidyr
+
+def gather( df, key, value, cols ):
+    id_vars = [ col for col in df.columns if col not in cols ]
+    id_values = cols
+    var_name = key
+    value_name = value
+    return pd.melt( df, id_vars, id_values, var_name, value_name )
+
 print("The normalised file is saved as " + output + " in the current directory")
 print("Done")                                  # Marks the end of the program
