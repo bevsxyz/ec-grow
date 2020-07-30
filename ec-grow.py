@@ -21,7 +21,8 @@ now = str(get_datetime())                          # Calls the get_datetime func
 ####### Get Time ########
 
 output = "result-" + now + ".csv"                  # Assign the name for output file as a string with unique name
-tempfile = open( str("temp-" + now + ".csv"), "a+")# Assign the name for temp file as a string with unique name and open 
+tempfile = "temp-" + now + ".csv"
+tempfile1 = open( str(tempfile), "a+")# Assign the name for temp file as a string with unique name and open 
 file_order = 0                                     # A variable to normalise the iteration number when dealing with
                                                    # multiple files
 LastIteration = [0]                                # Same as above but local
@@ -32,7 +33,7 @@ cell_num = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 
                                                    # A list of all headers with location for 96 well plates
 pattern = "\t"                                     # Assigns a delimiter
 pattern = pattern.join(cell_num)                   # Joins the header list with the delimiter specified
-tempfile.write("Iteration\t" + pattern + "\n")     # Writes the header to a tempfile
+tempfile1.write("Iteration\t" + pattern + "\n")     # Writes the header to a tempfile
 
 ####### Write Header #######
 
@@ -62,16 +63,16 @@ for file in opts.files:                            # A loop which goes throught 
                 Onetime = Iteration + row1 + row2 + row3 + row4 + row5 + row6 + row7 + row8 # Merges all the lists
                 s = ""                             # No delemiter hence empty string
                 s = s.join(Onetime)                # Joins the list into a string
-                tempfile.write(s + "\n")           # Writes the line to the current line and specifies new line in the end
+                tempfile1.write(s + "\n")           # Writes the line to the current line and specifies new line in the end
         f.close()                                  # The file is closed
     file_order = LastIteration[0]                  # Sets the highest iteration value as an int
-tempfile.close()                               # Close the tempfile
+tempfile1.close()                               # Close the tempfile
 
 ####### Merge Results #######
 
 
-tempfile1 = str("temp-" + now + ".csv")        # Declares the tempfile created previously
-with open( tempfile1 , 'r') as f:              # Opens the tempfile in reading mode
+
+with open( tempfile , 'r') as f:              # Opens the tempfile in reading mode
     results_df = pd.read_csv(f, delimiter = '\t')    # A dataframe is assigned
     t0_results_df = results_df.iloc[[0]].values[0]   # The t0 values are selected
     normalized_values = results_df.sub(t0_results_df)# The t0 values are subtracted from all other timepoint values
@@ -79,6 +80,6 @@ with open( tempfile1 , 'r') as f:              # Opens the tempfile in reading m
     normalized_values.drop("Iteration", axis=1, inplace=True) # Deletes the iteration column and sets the value to the original dataframe
     normalized_values.to_csv(output)           # The normalised values are saved onto an outputfile
     f.close()                                  # Close the tempfile
-os.remove("temp-" + now + ".csv")              # Delete the tempfile
+os.remove(tempfile)              # Delete the tempfile
 print("The normalised file is saved as " + output + " in the current directory")
 print("Done")                                  # Marks the end of the program
